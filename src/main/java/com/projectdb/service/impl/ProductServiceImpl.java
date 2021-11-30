@@ -5,24 +5,34 @@ import com.projectdb.dao.UserDAO;
 import com.projectdb.dao.impl.ProductDAOImpl;
 import com.projectdb.domain.Product;
 import com.projectdb.service.ProductService;
+import org.apache.log4j.Logger;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class ProductServiceImpl implements ProductService {
+    private static final Logger log = Logger.getLogger(UserServiceImpl.class);
+    private static ProductService productServiceImpl;
     ProductDAO productDAO;
 
-    public ProductServiceImpl() {
+    public static ProductService getProductService(){
+        if (productServiceImpl == null){
+            productServiceImpl = new ProductServiceImpl();
+        }
+        return productServiceImpl;
+    }
+
+    private ProductServiceImpl() {
         try {
             productDAO = new ProductDAOImpl();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            log.error(e);
         } catch (InstantiationException e) {
-            e.printStackTrace();
+            log.error(e);
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            log.error(e);
         }
     }
 

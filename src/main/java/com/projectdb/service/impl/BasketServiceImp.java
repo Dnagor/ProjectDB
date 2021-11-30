@@ -4,25 +4,34 @@ import com.projectdb.dao.BasketDAO;
 import com.projectdb.dao.impl.BasketDAOImpl;
 import com.projectdb.domain.Basket;
 import com.projectdb.service.BasketService;
+import org.apache.log4j.Logger;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class BasketServiceImp implements BasketService {
+    private static final Logger log = Logger.getLogger(BasketDAOImpl.class);
+    private static BasketService basketServiceImp;
     BasketDAO basketDAO;
 
-    public BasketServiceImp() {
+    public static BasketService getBasketService(){
+        if (basketServiceImp == null){
+            basketServiceImp = new BasketServiceImp();
+        }
+        return basketServiceImp;
+    }
+    private BasketServiceImp() {
         try {
             basketDAO = new BasketDAOImpl() {
             };
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            log.error(e);
         } catch (InstantiationException e) {
-            e.printStackTrace();
+            log.error(e);
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            log.error(e);
         }
     }
 

@@ -5,9 +5,12 @@
     <title>JSP - Hello World</title>
 </head>
 <body>
-<h1><%= "Hello World!" %>
-</h1>
-<br/>
-<a href="hello-servlet">Hello Servlet</a>
+<form action="registration" method="post">
+    FirstName:<input name="firstname">
+    LastName:<input name="lastname">
+    Email: <input name="email">
+    Password:<input name="password">
+    <input type="submit" value="submit">
+</form>
 </body>
 </html>

@@ -3,16 +3,19 @@ package com.projectdb.dao.impl;
 import com.projectdb.dao.UserDAO;
 import com.projectdb.domain.User;
 import com.projectdb.utils.ConnectionUtils;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserDAOImpl implements UserDAO {
+    private static final Logger log = Logger.getLogger(UserDAOImpl.class);
     private static final String readAll = "select * from user";
-    private static final String create = "insert into user(email, firstName, lastName, role) values (?,?,?,?)";
-    private static final String update = "update user set email=?, firstName=?, LastName=?, role=? where id =?";
+    private static final String create = "insert into user(email, firstName, lastName, role, password) values (?,?,?,?,?)";
+    private static final String update = "update user set email=?, firstName=?, LastName=?, role=?, password=? where id =?";
     private static final String readById = "select * from user where id = ?";
+    private static final String readByEmail = "select * from user where email = ?";
     private static final String deleteById = "delete from user where id = ?";
     private Connection connection;
     private PreparedStatement preparedStatement;
@@ -29,12 +32,13 @@ public class UserDAOImpl implements UserDAO {
             preparedStatement.setString(2, user.getFirstName());
             preparedStatement.setString(3, user.getLastName());
             preparedStatement.setString(4, user.getRole());
+            preparedStatement.setString(5, user.getPassword());
             preparedStatement.executeUpdate();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             resultSet.next();
             user.setId(resultSet.getInt(1));
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e);
         }
         return user;
     }
@@ -46,13 +50,15 @@ public class UserDAOImpl implements UserDAO {
             preparedStatement = connection.prepareStatement(readById);
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
             String email = resultSet.getString("email");
             String firstName = resultSet.getString("firstName");
             String lastName = resultSet.getString("lastName");
             String role = resultSet.getString("role");
-            user = new User(email, firstName, lastName, role);
+            String password = resultSet.getString("password");
+            user = new User(email, firstName, lastName, role, password);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e);
         }
         return user;
     }
@@ -65,10 +71,11 @@ public class UserDAOImpl implements UserDAO {
             preparedStatement.setString(2, user.getFirstName());
             preparedStatement.setString(3, user.getLastName());
             preparedStatement.setString(4, user.getRole());
-            preparedStatement.setInt(5, user.getId());
+            preparedStatement.setString(5, user.getPassword());
+            preparedStatement.setInt(6, user.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e);
         }
         return user;
     }
@@ -80,7 +87,7 @@ public class UserDAOImpl implements UserDAO {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e);
         }
     }
 
@@ -95,12 +102,34 @@ public class UserDAOImpl implements UserDAO {
                 String firstName = resultSet.getString("firstName");
                 String lastName = resultSet.getString("lastName");
                 String role = resultSet.getString("role");
+                String password = resultSet.getString("password");
                 Integer id = resultSet.getInt("id");
-                userList.add(new User(id,email, firstName, lastName, role));
+                userList.add(new User(id,email, firstName, lastName, role, password));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e);
         }
         return userList;
+    }
+
+    @Override
+    public User readUserByEmail(String email) {
+        User user = null;
+        try {
+            preparedStatement = connection.prepareStatement(readByEmail);
+            preparedStatement.setString(1, email);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            String email1 = resultSet.getString("email");
+            String firstName = resultSet.getString("firstName");
+            String lastName = resultSet.getString("lastName");
+            String role = resultSet.getString("role");
+            String password = resultSet.getString("password");
+            Integer id = resultSet.getInt("id");
+            user = new User(email1, firstName, lastName, role, password);
+        } catch (SQLException e) {
+            log.error(e);
+        }
+        return user;
     }
 }

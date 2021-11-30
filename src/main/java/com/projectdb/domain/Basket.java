@@ -1,22 +1,22 @@
 package com.projectdb.domain;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 public class Basket {
     private Integer id;
     private Integer userId;
     private Integer productId;
-    private Date purchaseDate;
+    private Timestamp purchaseDate;
 
-    public Basket(Integer id, Integer userId, Integer productId, Date purchaseDate) {
+    public Basket(Integer id, Integer userId, Integer productId, Timestamp purchaseDate) {
         this.id = id;
         this.userId = userId;
         this.productId = productId;
         this.purchaseDate = purchaseDate;
     }
 
-    public Basket(Integer userId, Integer productId, Date purchaseDate) {
+    public Basket(Integer userId, Integer productId, Timestamp purchaseDate) {
         this.userId = userId;
         this.productId = productId;
         this.purchaseDate = purchaseDate;
@@ -46,11 +46,11 @@ public class Basket {
         this.productId = productId;
     }
 
-    public Date getPurchaseDate() {
+    public Timestamp getPurchaseDate() {
         return purchaseDate;
     }
 
-    public void setPurchaseDate(Date purchaseDate) {
+    public void setPurchaseDate(Timestamp purchaseDate) {
         this.purchaseDate = purchaseDate;
     }
 

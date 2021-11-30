@@ -3,12 +3,14 @@ package com.projectdb.dao.impl;
 import com.projectdb.dao.ProductDAO;
 import com.projectdb.domain.Product;
 import com.projectdb.utils.ConnectionUtils;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDAOImpl implements ProductDAO {
+    private static final Logger log = Logger.getLogger(ProductDAOImpl.class);
     private static final String readAll = "select * from product";
     private static final String create = "insert into product(name, description, price) values (?,?,?)";
     private static final String update = "update product set name=?, description=?, price=? where id =?";
@@ -33,7 +35,7 @@ public class ProductDAOImpl implements ProductDAO {
             resultSet.next();
             product.setId(resultSet.getInt(1));
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e);
         }
         return product;
     }
@@ -51,7 +53,7 @@ public class ProductDAOImpl implements ProductDAO {
             Integer price = resultSet.getInt("price");
             product = new Product(name,desc,price);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e);
         }
         return product;
     }
@@ -66,7 +68,7 @@ public class ProductDAOImpl implements ProductDAO {
             preparedStatement.setInt(4, product.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e);
         }
         return product;
     }
@@ -78,7 +80,7 @@ public class ProductDAOImpl implements ProductDAO {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e);
         }
     }
 
@@ -96,7 +98,7 @@ public class ProductDAOImpl implements ProductDAO {
                 products.add(new Product(id,name,desc,price));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e);
         }
         return products;
     }
